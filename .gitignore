@@ -1,0 +1,5 @@
+config/local.*
+coverage/
+node_modules/
+npm-debug.log
+*.sw*
