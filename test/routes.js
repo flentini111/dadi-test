@@ -6,7 +6,7 @@ const expect = chai.expect;
 const express = require('express');
 const supertest = require('supertest');
 
-const routes = require('../src/routes');
+const routes = require('../src/routes/api');
 const apiVersion = 0;
 
 describe('routes', function () {
@@ -19,9 +19,11 @@ describe('routes', function () {
             getReviews: sandbox.stub()
         };
 
+        this.logger = sandbox.stub();
+
         this.app = express();
         this.router = express.Router();
-        this.routes = routes(this.router, this.db);
+        this.routes = routes(this.router, this.db, this.logger);
 
         this.app.use(`/api/${apiVersion}`, this.routes);
         this.agent = supertest.agent(this.app);
