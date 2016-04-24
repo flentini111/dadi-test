@@ -99,7 +99,7 @@ describe('db', function () {
                         }]
                     };
 
-                    // cheating by stubbing the fs module. In a real application the reviews should come from a db, easier to test.
+                    // I cheated by stubbing the fs module. In a real application the reviews should come from a db, easier to test.
 
                     sandbox.stub(fs, 'readFileSync', function () {
                         return JSON.stringify(reviews);

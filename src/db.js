@@ -5,6 +5,7 @@ const fs = require('fs');
 
 function db (config, omdb) {
     const reviews = JSON.parse(fs.readFileSync('./data/reviews.json', {encoding: 'utf-8'}));
+
     const cache = new AsyncCache({
         name: 'db',
         load: (params, callback) => {
@@ -56,9 +57,7 @@ function db (config, omdb) {
                 if (err) {
                     reject(err);
                 } else {
-                    result = result.Search;
-
-                    resolve(result);
+                    resolve(result.Search || result);
                 }
             });
         });
