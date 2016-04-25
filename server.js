@@ -18,8 +18,11 @@ app.use(morgan('combined', {stream: logger.stream}));
 
 // register routes
 app.use(`/api/${config.apiVersion}`, routes.api(express.Router(), db, logger.logger));
+app.use(routes.views(express.Router(), db, templates, logger.logger));
 
-app.use(routes.views(express.Router(), db, templates));
+app.use((req, res, next) => {
+    res.status(404).send('Page not found!');
+});
 
 app.listen(config.port, () => {
     console.log('Listening on', config.port);
