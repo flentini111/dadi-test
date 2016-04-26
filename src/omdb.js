@@ -8,10 +8,7 @@ const request = require('request');
 const apiUrl = 'http://www.omdbapi.com/?t={{title}}&y=&plot=short&r=json&type=movie';
 
 const requestBody = {
-    url: 'http://www.omdbapi.com',
-    qs: {
-        type: 'movie'
-    }
+    url: 'http://www.omdbapi.com'
 };
 
 /**
@@ -24,6 +21,8 @@ const requestBody = {
  * @return {Promise} resolves with the id details or search results. Gets rejected if an error occurs.
  */
 function get (params) {
+    requestBody.qs = { type: 'movie' };
+
     if (params.id) {
         requestBody.qs.i = params.id;
     } else if (params.search) {

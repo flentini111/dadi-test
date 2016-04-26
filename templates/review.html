@@ -1,35 +1,21 @@
 {>"header"/}
-  <main class="main">
-    <section class="grid grid--gutter push-4">
+<main class="main">
+<section class="grid grid--gutter push-4">
 
-      <div class="col w-5">
+    <div class="col w-5">
         <div class="film__poster media media--rounded media--pop">
-          <img src="{film.poster}" alt="{film.title} Poster" />
+            <img src="{review.poster}" alt="{review.filmTitle} Poster" />
         </div>
-      </div>
-
-      SINGLE REVIEW!
-
-      <div class="col w-7">
-        <h1 class="giga pad">{film.title}</h1>
-        <dl class="t">
-          <dt>Score</dt>
-          <dd>{film.rating}</dd>
-          <dt>Director</dt>
-          <dd>{film.director}</dd>
-          <dt>Length</dt>
-          <dd>{film.runtime}</dd>
-          <dt>Plot</dt>
-          <dd>{film.plot}</dd>
-        </dl>
-        <div class="push-3">
-          <h2 class="mega pad">Most read reviews</h2>
-            {#reviews}
-                {>"review-excerpt"/}{~n}
-            {/reviews}
+        <div>
+            <a class="deca pad btn btn--subtle" href="/film/{review.filmId}">Go to {review.filmTitle} page</a>
         </div>
-      </div>
+    </div>
 
-    </section>
-  </main>
+    <div class="col w-7">
+        <h1 class="giga pad">{review.title}</h1>
+        <div class="review__body t">{review.content}</div>
+    </div>
+
+</section>
+</main>
 {>"footer"/}

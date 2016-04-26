@@ -98,8 +98,9 @@ function db (config, omdb, dataset, logger) {
 
         const result = list.reduce((reviews, film) => {
             return reviews.concat(film.reviews.map((review) => {
-                // add a reference to the film poster to every review
+                // add a reference to the film poster and ID to every review
                 review.poster = film.poster;
+                review.filmId = film.ID;
                 return review;
             }));
         }, []).sort((a, b) => {
@@ -119,11 +120,41 @@ function db (config, omdb, dataset, logger) {
         return howmany >= dataset.length ? dataset : dataset.slice(0, howmany);
     }
 
+    /**
+     * Returns a review by ID.
+     *
+     * @param {number} id the review id
+     * @return {Object}
+     */
+    function getReview (id) {
+        if (!id) {
+            return;
+        }
+
+        id = parseInt(id);
+
+        for(let i=0; i<dataset.length; i++) {
+            let film = dataset[i];
+            if (film.reviews.length > 0) {
+                for(let j=0; j<film.reviews.length; j++){
+                    if(film.reviews[j].id === id) {
+                        film.reviews[j].filmId = film.ID;
+                        film.reviews[j].poster = film.poster;
+                        film.reviews[j].filmTitle = film.title;
+
+                        return film.reviews[j];
+                    }
+                }
+            }
+        }
+    }
+
     return {
         get: get,
         search: search,
         getPopular: getPopular,
         getMostReadReviews : getMostReadReviews,
+        getReview: getReview,
         model: filmModel
     };
 }

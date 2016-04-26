@@ -26,24 +26,8 @@ function apiRoutes (router, db, logger) {
         });
     });
 
-    router.get('/user/:username', (req, res, next) => {
-
-    });
-
-    router.route('/films')
-    .get((req, res, next) => {
-        // TODO perform a db selection of the latest N films
-    })
-    .post((req, res, next) => {
-
-    });
-
-    router.route('/reviews')
-    .get((req, res, next) => {
-
-    })
-    .post((req, res, next) => {
-
+    router.post('/reviews', (req, res, next) => {
+        // TODO create a new review
     });
 
     return router;

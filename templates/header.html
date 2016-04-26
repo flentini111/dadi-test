@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="/fonts/clear-sans.css">
   <link rel="stylesheet" href="/fonts/icons.css">
   <link rel="stylesheet" href="/main.css">
+  <link rel="stylesheet" href="/awesomplete.css" />
+  <script src="/awesomplete.min.js" async></script>
+  <script src="/main.js" async></script>
 </head>
 <body>
   <header class="header grid grid--gutter">
@@ -24,7 +27,7 @@
       </section>
       <!-- search -->
       <section class="navigation__search search col w-4">
-        <input class="search__input input input--text mega" placeholder="Search" value="" />
+        <input id="search_input" class="search__input input input--text mega" placeholder="Search" value="" />
         <!--<h1 class="search__title mega">Search</h1>-->
         <div class="search__suggestions"></div>
       </section>
