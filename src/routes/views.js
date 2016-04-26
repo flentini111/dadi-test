@@ -8,33 +8,36 @@ function viewsRoutes (router, db, templates, logger) {
     });
 
     router.get('/film/:id', (req, res, next) => {
-        const film = db.get(req.params.id);
-
-        if(film) {
+        db.get(req.params.id).then((film) => {
             templates.film({film: film, reviews: db.getMostReadReviews(2, film)}, (err, out) => {
                 res.send(out);
             });
-        }
+        });
     });
 
-    router.get('/film/:id', (req, res, next) => {
-        const film = db.get(req.params.id);
-
-        if(film) {
-            templates.film({film: film}, (err, out) => {
-                res.send(out);
-            });
-        }
+    router.get('/films', (req, res, next) => {
+        // let's show the latest 30 films
+        templates.films({films: db.getPopular(30)}, (err, out) => {
+            res.send(out);
+        });
     });
 
-    router.get('/film/:id', (req, res, next) => {
-        const film = db.get(req.params.id);
+    router.get('/review/:id', (req, res, next) => {
+        templates.review({}, (err, out) => {
+            res.send(out);
+        });
+    });
 
-        if(film) {
-            templates.film({film: film}, (err, out) => {
-                res.send(out);
-            });
-        }
+    router.get('/reviews', (req, res, next) => {
+        templates.reviews({reviews: db.getMostReadReviews(30)}, (err, out) => {
+            res.send(out);
+        });
+    });
+
+    router.get('/profile', (req, res, next) => {
+        templates.profile({}, (err, out) => {
+            res.send(out);
+        });
     });
 
     router.get('*', (req, res, next) => {

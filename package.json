@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "mocha test/**"
+    "test": "mocha test/"
   },
   "author": "Francesco Lentini <francesco.lentini@gmail.com>",
   "devDependencies": {

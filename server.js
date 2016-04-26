@@ -5,8 +5,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const omdb = require('./src/omdb');
-const db = require('./src/db')(config.db, omdb);
 const logger = require('./src/logger')(config.log);
+
+// fake dataset injected into the db interface
+const dataset = JSON.parse(require('fs').readFileSync('./data/dataset.json', {encoding: 'utf-8'}));
+
+const db = require('./src/db')(config.db, omdb, dataset, logger.logger);
 const routes = require('./src/routes');
 const templates = require('./src/templates');
 

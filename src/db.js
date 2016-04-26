@@ -1,16 +1,17 @@
 'use strict';
 
 const AsyncCache = require('async-cache');
-const fs = require('fs');
 
-function db (config, omdb) {
-    const dataset = JSON.parse(fs.readFileSync('./data/dataset.json', {encoding: 'utf-8'}))
-        .sort((a,b) => parseInt(b.imdbVotes) - parseInt(a.imdbVotes))
-        .map(filmModel);
+function db (config, omdb, dataset, logger) {
+    // sort the records by imdb rating and apply the model function to each of them
+    dataset = dataset.sort((a,b) => parseInt(b.imdbVotes) - parseInt(a.imdbVotes))
+    .map(filmModel);
 
     const cache = new AsyncCache({
         load: (params, callback) => {
-            omdb.get(params).then((film) => {
+            // lru cache checks for identity if objects are used as keys, that's why I am serializing the argument and deserializing it here
+            // Needs to be improved!
+            omdb.get(JSON.parse(params)).then((film) => {
                 callback(null, film);
             }).catch((err) => {
                 callback(err);
@@ -20,6 +21,10 @@ function db (config, omdb) {
         maxAge: config.cache.maxAge
     });
 
+    /**
+     * @param {Object} rawData film entry coming from the dataset
+     * @return {Object}
+     */
     function filmModel (rawData) {
         return {
             ID : rawData.imdbID,
@@ -29,7 +34,7 @@ function db (config, omdb) {
             director: rawData.Director,
             poster: rawData.Poster,
             plot: rawData.Plot,
-            reviews: rawData.reviews,
+            reviews: rawData.reviews || [],
             runtime: rawData.Runtime,
             rating: rawData.imdbRating
         };
@@ -40,7 +45,23 @@ function db (config, omdb) {
      * @return {Promise} resolves with the film details plus the reviews if present
      */
     function get (id) {
-        return dataset.filter((entry) => entry.ID === id)[0];
+        return new Promise((resolve, reject) => {
+            const film = dataset.filter((entry) => entry.ID === id)[0];
+            // return the film if it's on our local datastore
+            if (film) {
+                resolve(film);
+            } else {
+                // otherwise query omdb for the details
+                cache.get(JSON.stringify({id: id}), (err, result) => {
+                    if (err) {
+                        logger.error(err);
+                        reject(err);
+                    } else {
+                        resolve(filmModel(result));
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -53,7 +74,7 @@ function db (config, omdb) {
                 reject('a search query must be provided');
             }
 
-            cache.get({search: query}, (err, result) => {
+            cache.get(JSON.stringify({search: query}), (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -102,7 +123,8 @@ function db (config, omdb) {
         get: get,
         search: search,
         getPopular: getPopular,
-        getMostReadReviews : getMostReadReviews
+        getMostReadReviews : getMostReadReviews,
+        model: filmModel
     };
 }
 

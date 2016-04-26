@@ -23,7 +23,13 @@ describe('db', function () {
             get: sandbox.stub()
         };
 
-        this.db = db(this.config, this.omdb);
+        this.dataset = [];
+
+        this.logger = {
+            error: sandbox.stub()
+        };
+
+        this.db = db(this.config, this.omdb, this.dataset, this.logger);
     });
 
     afterEach(function () {
@@ -33,7 +39,14 @@ describe('db', function () {
     describe('get', function () {
         const filmDetails = {
             imdbID: 'movieId',
-            title: 'Film title'
+            Title: 'Film title',
+            Year: '2015',
+            Released: '2 May 2015',
+            Director: 'The Director',
+            Poster: 'http://poster.url',
+            Plot: 'Film plot',
+            Runtime: '150 min',
+            imdbRating: '6.2'
         };
 
         beforeEach(function () {
@@ -41,7 +54,7 @@ describe('db', function () {
         });
 
         it('should return the film details', function () {
-            return expect(this.db.get('Film title')).to.eventually.become(filmDetails);
+            return expect(this.db.get('Film title')).to.eventually.become(this.db.model(filmDetails));
         });
 
         it('should cache the results', function () {
@@ -75,43 +88,14 @@ describe('db', function () {
         });
     });
 
-    describe('getReviews', function () {
-        describe('when no id is provided', function () {
-            it('should return all the reviews in the collection', function () {
-                expect(this.db.getReviews()).to.be.an('object');
-            });
-        });
+    describe('getPopular', function () {
+    });
 
-        describe('when an id is provided', function () {
-            describe('but no reviews are present', function () {
-                it('should return an empty array', function () {
-                    expect(this.db.getReviews('movieId')).to.be.instanceof(Array).and.to.be.empty;
-                });
-            });
+    describe('getMostReadReviews', function () {
 
-            describe('and reviews are present', function () {
-                beforeEach(function () {
-                    const reviews = {
-                        movieId: [{
-                            author: 'review author',
-                            title: 'review title',
-                            content: 'review content'
-                        }]
-                    };
+    });
 
-                    // I cheated by stubbing the fs module. In a real application the reviews should come from a db, easier to test.
+    describe('model', function () {
 
-                    sandbox.stub(fs, 'readFileSync', function () {
-                        return JSON.stringify(reviews);
-                    });
-
-                    this.db = db(this.config, this.omdb);
-                });
-
-                it('should return a list of reviews', function () {
-                    expect(this.db.getReviews('movieId')).to.be.instanceof(Array).and.to.have.deep.property('[0].author', 'review author');
-                });
-            });
-        });
     });
 });
