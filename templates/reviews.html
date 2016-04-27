@@ -3,18 +3,19 @@
 <section class="grid grid--gutter push-4">
 
     <div class="push-2 col w-12 grid grid--gutter">
-        Reviews!
         <ul class="nav-list">
             {#reviews}
             <li>
-                <article class="review-excerpt grid">
+                <article class="grid grid--gutter">
                     <div class="col w-2 push-2">
                         <div class="film__poster media media--rounded media--pop">
                             <img src="{poster}" alt="{title} Poster" />
                         </div>
                     </div>
                     <div class="col w-8 push-4">
-                        {title}
+                        {#reviews}
+                        <a class="deca pad btn " href="/review/{id}">{title}</a>
+                        {/reviews}
                     </div>
                 </article>
             </li>

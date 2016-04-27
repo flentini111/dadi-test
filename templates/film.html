@@ -21,7 +21,10 @@
           <dd>{film.plot}</dd>
         </dl>
         <div class="push-3">
+        {@gt key=reviews.length value=1}
           <h2 class="mega pad">Most read reviews</h2>
+        {/gt}
+
             {#reviews}
                 {>"review-excerpt"/}{~n}
             {/reviews}

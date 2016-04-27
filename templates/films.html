@@ -6,16 +6,19 @@
         <ul class="nav-list">
             {#films}
             <li>
-                <article class="review-excerpt grid">
-                    <div class="col w-2 push-2">
-                        <div class="film__poster media media--rounded media--pop">
-                            <img src="{poster}" alt="{title} Poster" />
-                        </div>
+            <article class="grid grid--gutter">
+                <div class="col w-2 push-2">
+                    <div class="film__poster media media--rounded media--pop">
+                        <img src="{poster}" alt="{title} Poster" />
                     </div>
-                    <div class="col w-8 push-4">
-                        {title}
-                    </div>
-                </article>
+                </div>
+                <div class="col w-8 push-2">
+                    <a class="deca pad btn btn--subtle" href="film/{ID}">
+                        <h1 class="kilo"> {title} </h1>
+                    </a>
+                    <div class="review__body t">{plot}</div>
+                </div>
+            </article>
             </li>
             {/films}
         </ul>
