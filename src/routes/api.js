@@ -3,6 +3,7 @@
 function apiRoutes (router, db, logger) {
     router.get('/search', (req, res, next) => {
         if(req.query.s && req.query.s.length >= 3) {
+            // input should be sanitized here
             db.search(req.query.s).then((result) => {
                 res.writeHead(200, {'Content-Type' : 'application/json'});
                 res.end(JSON.stringify(result));

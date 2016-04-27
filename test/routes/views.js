@@ -15,7 +15,7 @@ module.exports = () => {
         this.db = {
             get: sandbox.stub(),
             getPopular: sandbox.stub(),
-            getMostReadReviews: sandbox.stub()
+            getMostReadReviews: sandbox.stub().returns([])
         };
 
         this.logger = sandbox.stub();

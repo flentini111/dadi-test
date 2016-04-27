@@ -1,17 +1,17 @@
-# DADI+ SEEN
+# DADI+ test
 
 ### Installation
 
-To install all the dependencies seen-server:
+To install all the dependencies:
 
-    cd /path/to/server
+    cd /path/to/app
     npm install
 
-#### Run the server
+#### Run the application
 
-To run seen-server:
+To run the server:
 
-    cd /path/to/server
+    cd /path/to/app
     npm start
 
 What it does:
@@ -30,7 +30,7 @@ Improvements:
 
 To run the server tests:
 
-    cd /path/to/server
+    cd /path/to/app
     npm test
 
 Improvements:
@@ -41,10 +41,11 @@ Improvements:
 
 All the code is located in the src folder, with `server.js` as the application entry point located in the root folder. The db is mocked by loading `data/dataset.json` file that contains film information and reviews.
 
-The logger is configured to write both to console and to file and providing a simple event store.
+The logger is configured to write both to console and to file, providing a simple event store.
 
 If the film is not present in the local datastore, a call to the OMDB Api is made through the `src/omdb` interface, which response is cached in memory. This also allows the search to work.
 
 ###### What doesn't work:
 * the dropdown filter next to the titles, in the home
 * the user profile
+* test coverage should be improved

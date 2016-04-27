@@ -1,10 +1,13 @@
 'use strict';
 
+const moment = require('moment');
+
 function viewsRoutes (router, db, templates, logger) {
     router.get('/', (req, res, next) => {
         templates.index({popular: db.getPopular(4), mostReadReviews: db.getMostReadReviews(2)}, (err, out) => {
             if (err) {
                 logger.error(err);
+                res.status(500).end();
             }
 
             res.send(out);
@@ -13,9 +16,20 @@ function viewsRoutes (router, db, templates, logger) {
 
     router.get('/film/:id', (req, res, next) => {
         db.get(req.params.id).then((film) => {
-            templates.film({film: film, reviews: db.getMostReadReviews(2, film)}, (err, out) => {
+            const reviews = db.getMostReadReviews(2, film).map((review) => {
+                if (!review.excerpt) {
+                    review.excerpt = truncate(review.content, 45);
+                }
+
+                review.date = moment(review.meta.created).format('D MMMM YYYY');
+
+                return review;
+            });
+
+            templates.film({film: film, reviews: reviews}, (err, out) => {
                 if (err) {
                     logger.error(err);
+                    res.status(500).end();
                 }
 
                 res.send(out);
@@ -28,6 +42,7 @@ function viewsRoutes (router, db, templates, logger) {
         templates.films({films: db.getPopular(30)}, (err, out) => {
             if (err) {
                 logger.error(err);
+                res.status(500).end();
             }
 
             res.send(out);
@@ -38,6 +53,7 @@ function viewsRoutes (router, db, templates, logger) {
         templates.review({review: db.getReview(req.params.id)}, (err, out) => {
             if (err) {
                 logger.error(err);
+                res.status(500).end();
             }
 
             res.send(out);
@@ -46,15 +62,28 @@ function viewsRoutes (router, db, templates, logger) {
 
     router.get('/reviews', (req, res, next) => {
         const reviews = db.getMostReadReviews(30).reduce((r, review) => {
-            r[review.filmId] = r[review.filmId]||{poster: review.poster, reviews: []};
-            r[review.filmId].reviews.push(review);
+            // each element is a container of reviews, one per film
+            const reviewContainer = r.filter((container) => {
+                return container.filmId === review.filmId;
+            })[0];
+
+            if(reviewContainer) {
+                reviewContainer.reviews.push(review);
+            } else {
+                r.push({
+                    filmId: review.filmId,
+                    poster: review.poster,
+                    reviews: [review]
+                });
+            }
 
             return r;
-        }, {});
+        }, []);
 
         templates.reviews({reviews: reviews}, (err, out) => {
             if (err) {
                 logger.error(err);
+                res.status(500).end();
             }
 
             res.send(out);
@@ -65,6 +94,7 @@ function viewsRoutes (router, db, templates, logger) {
         templates.profile({}, (err, out) => {
             if (err) {
                 logger.error(err);
+                res.status(500).end();
             }
 
             res.send(out);

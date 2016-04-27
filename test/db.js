@@ -89,13 +89,10 @@ describe('db', function () {
     });
 
     describe('getPopular', function () {
+        // TODO
     });
 
     describe('getMostReadReviews', function () {
-
-    });
-
-    describe('model', function () {
-
+        // TODO
     });
 });
